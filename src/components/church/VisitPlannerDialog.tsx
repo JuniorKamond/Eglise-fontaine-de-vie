@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import emailjs from "emailjs-com";
+import { submitVisitRequest } from "@/lib/visit-requests";
 import {
   Dialog,
   DialogContent,
@@ -22,7 +22,6 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
-import { config } from "@/config";
 import { ArrowRight, Loader2 } from "lucide-react";
 
 // Schéma de validation
@@ -53,43 +52,34 @@ export const VisitPlannerDialog = () => {
   const onSubmit = async (data: VisitPlannerFormData) => {
     setIsLoading(true);
     try {
-      // Initialiser EmailJS
-      emailjs.init("Lc10mJpV9NRuvgPwq");
-
-      // Préparer les paramètres pour le template EmailJS
-      const templateParams = {
-        to_email: config.contact.email,
-        from_name: `${data.prenom} ${data.nom}`,
-        from_email: data.email,
-        subject: "Nouvelle demande de visite",
-        objet_visite: data.objet,
+      const result = await submitVisitRequest({
         nom: data.nom,
         prenom: data.prenom,
-        visitor_email: data.email,
-      };
-
-      // Envoyer l'email via EmailJS
-      await emailjs.send(
-        "service_3n2ie3a",
-        "hygklvd",
-        templateParams
-      );
-
-      toast({
-        title: "Succès!",
-        description:
-          "Votre demande de visite a été envoyée. Merci de nous avoir contactés!",
-        variant: "default",
+        email: data.email,
+        objet: data.objet,
       });
 
-      form.reset();
-      setOpen(false);
-    } catch (error) {
-      console.error("Erreur lors de l'envoi:", error);
+      if (result.success) {
+        toast({
+          title: "Succès!",
+          description: "Votre demande de visite a été envoyée. Merci de nous avoir contactés!",
+          variant: "default",
+        });
+
+        form.reset();
+        setOpen(false);
+      } else {
+        toast({
+          title: "Erreur",
+          description: result.error || "Une erreur est survenue lors de l'envoi.",
+          variant: "destructive",
+        });
+      }
+    } catch (error: any) {
+      console.error("Erreur:", error);
       toast({
         title: "Erreur",
-        description:
-          "Une erreur est survenue lors de l'envoi. Veuillez réessayer.",
+        description: "Une erreur inattendue est survenue.",
         variant: "destructive",
       });
     } finally {
