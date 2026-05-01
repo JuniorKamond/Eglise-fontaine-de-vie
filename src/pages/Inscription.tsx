@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { supabase } from "@/lib/supabase";
+import emailjs from '@emailjs/browser';
 import { config } from "@/config";
 import { User, Mail, Phone, CheckCircle, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -40,26 +41,18 @@ export const Inscription = () => {
       setError("Une erreur est survenue. Veuillez réessayer.");
     } else {
       try {
-        await fetch("https://api.resend.com/emails", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${import.meta.env.VITE_RESEND_API_KEY}`,
+        await emailjs.send(
+          "service_3n2ie3a",
+          "template_5ulwhp4",
+          {
+            nom: form.nom,
+            prenom: form.prenom,
+            email: form.email,
+            telephone: form.telephone,
+            message: form.objet || "Non renseigné",
           },
-          body: JSON.stringify({
-            from: "onboarding@resend.dev",
-            to: "fdv0501@gmail.com",
-            subject: "Nouvelle inscription — Église Fontaine de Vie",
-            html: `
-              <h2>Nouvelle demande de visite</h2>
-              <p><strong>Nom :</strong> ${form.nom}</p>
-              <p><strong>Prénom :</strong> ${form.prenom}</p>
-              <p><strong>Email :</strong> ${form.email}</p>
-              <p><strong>Téléphone :</strong> ${form.telephone}</p>
-              <p><strong>Objet :</strong> ${form.objet || "Non renseigné"}</p>
-            `,
-          }),
-        });
+          "Lc10mJpV9NRuvgPwq"
+        );
       } catch (emailError) {
         console.error("Erreur email:", emailError);
       }
