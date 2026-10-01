@@ -6,8 +6,8 @@ import { emailjsConfig } from "@/config";
 // Les bibliothèques ne sont chargées qu'au moment de l'envoi (pages plus légères)
 let client: SupabaseClient | null = null;
 const supabase = async () => {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    const url = process.env.SUPABASE_URL;
+  const key = process.env.SUPABASE_ANON_KEY;
   if (!url || !key) return null;
   if (!client) client = (await import("@supabase/supabase-js")).createClient(url, key);
   return client;
