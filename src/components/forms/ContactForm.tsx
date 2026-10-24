@@ -39,9 +39,15 @@ export function ContactForm() {
     try {
       await submitContact(data);
       setStatus("sent");
-    } catch (err) {
-      console.error(err);
-      setErrors({ form: `L'envoi n'a pas abouti. Réessayez, ou écrivez-nous directement à ${config.contact.email}.` });
+    } catch (err: unknown) {
+      console.error("Erreur formulaire contact :", err);
+      const e = err as { text?: string; message?: string };
+      const detail = e?.text || e?.message;
+      setErrors({
+        form: detail
+          ? `L'envoi n'a pas abouti : ${detail}. Écrivez-nous à ${config.contact.email}.`
+          : `L'envoi n'a pas abouti. Réessayez, ou écrivez-nous directement à ${config.contact.email}.`,
+      });
       setStatus("idle");
     }
   }

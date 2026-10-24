@@ -40,9 +40,15 @@ export function VisitForm() {
       const result = await submitVisit(data);
       setEmailSent(result.emailSent);
       setStatus("sent");
-    } catch (err) {
-      console.error(err);
-      setErrors({ form: `L'envoi n'a pas abouti. Vérifiez votre connexion et réessayez, ou appelez-nous au ${config.contact.telephone}.` });
+    } catch (err: unknown) {
+      console.error("Erreur formulaire visite :", err);
+      const e = err as { text?: string; message?: string };
+      const detail = e?.text || e?.message;
+      setErrors({
+        form: detail
+          ? `L'envoi n'a pas abouti : ${detail}. Vérifiez votre connexion ou appelez-nous au ${config.contact.telephone}.`
+          : `L'envoi n'a pas abouti. Vérifiez votre connexion et réessayez, ou appelez-nous au ${config.contact.telephone}.`,
+      });
       setStatus("idle");
     }
   }

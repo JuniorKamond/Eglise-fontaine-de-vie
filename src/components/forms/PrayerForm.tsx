@@ -70,10 +70,14 @@ export function PrayerForm() {
         anonyme,
       });
       setStatus("sent");
-    } catch (err) {
-      console.error(err);
+    } catch (err: unknown) {
+      console.error("Erreur formulaire prière :", err);
+      const e = err as { text?: string; message?: string };
+      const detail = e?.text || e?.message;
       setErrors({
-        form: `L'envoi n'a pas pu aboutir. Veuillez réessayer ou contacter directement l'église au ${config.contact.telephone}.`,
+        form: detail
+          ? `L'envoi n'a pas pu aboutir : ${detail}. Contactez directement l'église au ${config.contact.telephone}.`
+          : `L'envoi n'a pas pu aboutir. Veuillez réessayer ou contacter directement l'église au ${config.contact.telephone}.`,
       });
       setStatus("idle");
     }
