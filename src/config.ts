@@ -201,6 +201,7 @@ export const navigation = [
   { label: "À propos", href: "/a-propos" },
   { label: "Prédications", href: "/predications" },
   { label: "Événements", href: "/evenements" },
+  { label: "Prière", href: "/priere" },
   { label: "Mouvement", href: "/mouvement" },
   { label: "Contact", href: "/contact" },
 ];

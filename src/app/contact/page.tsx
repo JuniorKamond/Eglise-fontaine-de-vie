@@ -23,6 +23,14 @@ export default function ContactPage() {
           <div className="lg:col-span-5">
             <h2 className="text-h3 text-encre">Nous joindre</h2>
             <div className="mt-8"><ContactDetails /></div>
+            <div className="mt-8 rounded-xl border border-trait bg-calcaire/50 p-6">
+              <span className="text-meta font-medium text-or-fonce">Besoin de soutien spirituel ?</span>
+              <h3 className="mt-1 font-serif text-[1.2rem] text-encre">Une demande de prière ?</h3>
+              <p className="mt-2 text-meta text-brume">
+                Vous traversez une épreuve ou avez un sujet d'intercession ? Notre équipe pastorale et nos intercesseurs prient pour vous en toute discrétion.
+              </p>
+              <a href="/priere" className="lien mt-4 text-encre">Déposer une demande de prière</a>
+            </div>
             {socialLinks.length > 0 ? (
               <ul className="mt-8 flex gap-3">
                 {socialLinks.map(({ label, href }) => {
