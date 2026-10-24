@@ -207,10 +207,10 @@ export const navigation = [
 ];
 
 // ----------------------------------------------------------
-//  ENVOI DES FORMULAIRES (EmailJS — clés publiques reprises de l'ancien site)
+//  ENVOI DES FORMULAIRES (EmailJS)
 // ----------------------------------------------------------
 export const emailjsConfig = {
-  serviceId: "service_3n2ie3a",
-  templateId: "template_5ulwhp4",
+  serviceId: "service_a6nx51c",
+  templateId: "template_qbn5bza",
   publicKey: "Lc10mJpV9NRuvgPwq",
 };
