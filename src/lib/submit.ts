@@ -33,29 +33,78 @@ export type PrayerData = {
 
 /** Planifier une visite — même fonctionnement que l'ancien formulaire /inscription */
 export async function submitVisit(data: VisitData) {
-  const db = await supabase();
-  if (db) {
-    const { error } = await db.from("inscriptions").insert([data]);
-    if (error) throw error;
-  }
+  let dbSuccess = false;
+  let emailSuccess = false;
+  let lastError: unknown = null;
+
+  // 1. Sauvegarde en base de données Supabase
   try {
-    await sendEmail({ ...data, message: data.objet || "Non renseigné" });
-    return { emailSent: true };
-  } catch (e) {
-    if (!db) throw e;
-    console.error("EmailJS :", e);
-    return { emailSent: false };
+    const db = await supabase();
+    if (db) {
+      const { error } = await db.from("inscriptions").insert([data]);
+      if (error) {
+        console.warn("Supabase (inscriptions) :", error.message || error);
+      } else {
+        dbSuccess = true;
+      }
+    }
+  } catch (err) {
+    console.warn("Erreur Supabase visite :", err);
   }
+
+  // 2. Envoi de l'e-mail avec EmailJS
+  try {
+    await sendEmail({
+      ...data,
+      message: data.objet || "Demande de visite planifiée",
+      to_email: "fdv0501@gmail.com",
+    });
+    emailSuccess = true;
+  } catch (e) {
+    console.error("Erreur EmailJS visite :", e);
+    lastError = e;
+  }
+
+  // Si au moins l'un des deux a réussi, on considère la visite prise en compte
+  if (emailSuccess || dbSuccess) {
+    return { emailSent: emailSuccess };
+  }
+
+  // Si les deux ont échoué, on remonte l'erreur
+  throw lastError || new Error("Échec de l'enregistrement et de l'envoi");
 }
 
 /** Formulaire de contact — même fonctionnement que l'ancien site */
 export async function submitContact(data: ContactData) {
-  const db = await supabase();
-  if (db) {
-    const { error } = await db.from("messages").insert([data]);
-    if (error) throw error;
+  let dbSuccess = false;
+  let emailSuccess = false;
+  let lastError: unknown = null;
+
+  try {
+    const db = await supabase();
+    if (db) {
+      const { error } = await db.from("messages").insert([data]);
+      if (error) console.warn("Supabase (messages) :", error.message || error);
+      else dbSuccess = true;
+    }
+  } catch (err) {
+    console.warn("Erreur Supabase contact :", err);
   }
-  await sendEmail(data);
+
+  try {
+    await sendEmail({
+      ...data,
+      to_email: "fdv0501@gmail.com",
+    });
+    emailSuccess = true;
+  } catch (e) {
+    console.error("Erreur EmailJS contact :", e);
+    lastError = e;
+  }
+
+  if (!emailSuccess && !dbSuccess) {
+    throw lastError || new Error("Échec de l'envoi du message");
+  }
 }
 
 /** Demande de prière — transmis au pasteur et à l'intercession */
