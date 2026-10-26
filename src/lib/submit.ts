@@ -114,13 +114,17 @@ export async function submitPrayer(data: PrayerData) {
     ? "Anonyme"
     : [data.prenom, data.nom].filter(Boolean).join(" ") || "Anonyme";
 
+  // En mode anonyme, aucune coordonnée personnelle n'est transmise
+  const telephone = data.anonyme ? null : (data.telephone || null);
+  const email = data.anonyme ? null : (data.email || null);
+
   if (db) {
     try {
       const { error } = await db.from("prieres").insert([
         {
           nom: demandeur,
-          telephone: data.telephone || null,
-          email: data.email || null,
+          telephone,
+          email,
           sujet: data.sujet,
           confidentialite: data.confidentialite,
           message: data.message,
@@ -130,9 +134,9 @@ export async function submitPrayer(data: PrayerData) {
         await db.from("messages").insert([
           {
             nom: demandeur,
-            email: data.email || "Non renseigne",
+            email: email || "Non renseigne",
             objet: `[Prière - ${data.confidentialite === "pasteur" ? "Pasteur" : "Intercession"}] ${data.sujet}`,
-            message: `Confidentialité : ${data.confidentialite === "pasteur" ? "Strictement confidentiel Pasteur" : "Équipe d'intercession"}\nTéléphone : ${data.telephone || "Non renseigné"}\n\n${data.message}`,
+            message: `Confidentialité : ${data.confidentialite === "pasteur" ? "Strictement confidentiel Pasteur" : "Équipe d'intercession"}\nTéléphone : ${telephone || "Non renseigné"}\n\n${data.message}`,
           },
         ]);
       }
@@ -145,10 +149,20 @@ export async function submitPrayer(data: PrayerData) {
     await sendEmail({
       nom: demandeur,
       prenom: "",
-      email: data.email || "fdv0501@gmail.com",
-      telephone: data.telephone || "Non renseigné",
+      // En mode anonyme : l'email de réponse est celui de l'église, pas de la personne
+      email: email || "fdv0501@gmail.com",
+      telephone: telephone || "Non renseigné",
       objet: `[Demande de prière] ${data.sujet} (${data.confidentialite === "pasteur" ? "Confidentiel Pasteur" : "Intercession"})`,
-      message: `Demandeur : ${demandeur}\nTéléphone : ${data.telephone || "Non renseigné"}\nNiveau de confidentialité : ${data.confidentialite === "pasteur" ? "🔒 Confidentiel Pasteur Yann Dayere uniquement" : "👥 Partageable avec l'équipe d'intercession"}\nThème : ${data.sujet}\n\nRequête :\n${data.message}`,
+      message: [
+        `Demandeur : ${demandeur}`,
+        `Téléphone : ${telephone || "Non renseigné"}`,
+        `Email : ${email || "Non renseigné"}`,
+        `Niveau de confidentialité : ${data.confidentialite === "pasteur" ? "🔒 Confidentiel — Pasteur Yann Dayere uniquement" : "👥 Partageable avec l'équipe d'intercession"}`,
+        `Thème : ${data.sujet}`,
+        ``,
+        `Requête :`,
+        data.message,
+      ].join("\n"),
     });
     return { emailSent: true };
   } catch (e) {
