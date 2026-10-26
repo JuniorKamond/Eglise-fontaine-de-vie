@@ -19,10 +19,10 @@ export function Intro() {
         </AnimatedSection>
 
         {/* Le verset apparaît dans le hero sur grand écran ; ici sur mobile et tablette */}
-        <AnimatedSection className="border-l border-or/60 pl-6 lg:hidden">
+        <AnimatedSection className="border-l border-encre/20 pl-6 lg:hidden">
           <blockquote>
             <p className="font-serif text-[1.15rem] italic leading-relaxed text-encre/85">{config.eglise.verset}</p>
-            <footer className="mt-3 text-meta text-or-fonce">{config.eglise.reference_verset}</footer>
+            <footer className="mt-3 text-meta text-brume">{config.eglise.reference_verset}</footer>
           </blockquote>
         </AnimatedSection>
       </div>

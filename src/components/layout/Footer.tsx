@@ -15,7 +15,7 @@ export function Footer() {
           <Image src={logoWhite} alt={config.eglise.nom} width={104} height={104} className="h-[104px] w-[104px]" />
           <blockquote className="mt-8 max-w-sm font-serif text-[1.05rem] italic leading-relaxed text-white/75">
             {config.eglise.verset}
-            <footer className="mt-3 font-sans text-meta not-italic text-or">{config.eglise.reference_verset}</footer>
+            <footer className="mt-3 font-sans text-meta not-italic text-white/45">{config.eglise.reference_verset}</footer>
           </blockquote>
         </div>
 

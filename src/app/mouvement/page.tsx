@@ -33,8 +33,7 @@ export default function MovementPage() {
         <AnimatedSection className="conteneur">
           <blockquote className="max-w-4xl">
             <p className="font-serif text-[clamp(1.6rem,3.6vw,2.9rem)] italic leading-[1.3] text-encre">{m.verset}</p>
-            <footer className="mt-8 flex items-center gap-4 text-meta text-or-fonce">
-              <span className="h-px w-10 bg-or-fonce/60" aria-hidden />
+            <footer className="mt-8 text-meta text-brume">
               {m.reference_verset}
             </footer>
           </blockquote>

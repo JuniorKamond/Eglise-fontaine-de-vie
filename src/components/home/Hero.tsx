@@ -111,7 +111,7 @@ export function Hero() {
               Rejoignez-nous chaque dimanche, {config.horaires.culte_court}
             </motion.p>
             <h1 className="font-serif">
-              <Line delay={0.3} className="text-[clamp(1.5rem,3vw,2.25rem)] italic leading-none text-or-pale/90">Église</Line>
+              <Line delay={0.3} className="text-[clamp(1.5rem,3vw,2.25rem)] leading-none text-white/70">Église</Line>
               <Line delay={0.42} className="text-display">Fontaine</Line>
               <Line delay={0.54} className="text-display">de Vie</Line>
             </h1>
@@ -136,8 +136,7 @@ export function Hero() {
 
           <motion.blockquote {...fade(1.3)} className="hidden max-w-sm justify-self-end lg:col-span-4 lg:block">
             <p className="font-serif text-[1.15rem] italic leading-[1.55] text-white/80">{config.eglise.verset}</p>
-            <footer className="mt-4 flex items-center gap-3 text-meta text-or">
-              <span className="h-px w-8 bg-or/60" aria-hidden />
+            <footer className="mt-4 text-meta text-white/55">
               {config.eglise.reference_verset}
             </footer>
           </motion.blockquote>

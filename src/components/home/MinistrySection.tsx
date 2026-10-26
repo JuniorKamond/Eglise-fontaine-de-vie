@@ -36,7 +36,7 @@ export function MinistrySection() {
         <AnimatedSection className="mx-auto mt-20 max-w-2xl text-center lg:mt-28">
           <blockquote>
             <p className="font-serif text-[clamp(1.25rem,2.2vw,1.6rem)] italic leading-relaxed text-white/85">{m.verset}</p>
-            <footer className="mt-4 text-meta text-or">{m.reference_verset}</footer>
+            <footer className="mt-4 text-meta text-white/55">{m.reference_verset}</footer>
           </blockquote>
         </AnimatedSection>
       </div>
